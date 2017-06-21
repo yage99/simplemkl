@@ -1,6 +1,6 @@
 function [K,option]=svmkernel(x,kernel,kerneloption,xsup,framematrix,vector,dual);
 
-% Usage  K=svkernel(x,kernel,kerneloption,xsup,frame,vector,dual);
+% Usage  K=svmkernel(x,kernel,kerneloption,xsup,frame,vector,dual);
 %
 % Returns the scalar product of the vectors x by using the
 % mapping defined by the kernel function or x and xsup
@@ -206,6 +206,4 @@ case 'jcb'
     K=x*xsup';
     
 end;
-
-
 
