@@ -187,7 +187,7 @@ while loop & nloopmax >0 ;
 
     if seuil ~=0 & max(Sigma)>seuil & nloop < option.seuilitermax
         Sigma=(Sigma.*(Sigma>seuil))*SumSigma/sum(Sigma.*(Sigma>seuil));
-    end;
+    end
 
     %-------------------------------
     % Numerical cleaning
@@ -201,7 +201,7 @@ while loop & nloopmax >0 ;
         option.goldensearch_deltmax=option.goldensearch_deltmax/10;
     elseif option.goldensearch_deltmax~=goldensearch_deltmaxinit
         option.goldensearch_deltmax*10;
-    end;
+    end
 
 
     %----------------------------------------------------
@@ -237,7 +237,7 @@ while loop & nloopmax >0 ;
         case 'svmreg'
 
             dualitygap=(obj +   max(normek) - Alpsup'*[-option.svmreg_epsilon+yapp ; -option.svmreg_epsilon-yapp])/obj;
-    end;
+    end
 
 
     history.dualitygap=[history.dualitygap dualitygap];
@@ -250,7 +250,7 @@ while loop & nloopmax >0 ;
             fprintf('--------------------------------------------------\n');
             fprintf('Iter | Obj.    | DiffBetas | DualGap  | KKT C.   |\n');
             fprintf('--------------------------------------------------\n');
-        end;
+        end
         fprintf('%d   | %8.4f | %6.4f   | %6.4f | %6.4f\n',[nloop obj   max(abs(Sigma-Sigmaold)) dualitygap KKTconstraint]);
     end
 
@@ -290,11 +290,13 @@ while loop & nloopmax >0 ;
     %----------------------------------------------------
     if  option.stopdualitygap== 1 & dualitygap < option.seuildualitygap
         loop = 0;
-        fprintf(1,'Duality gap criteria reached \n');
+        if verbose
+            fprintf(1,'Duality gap criteria reached \n');
+        end
 
         history.sigma= [history.sigma;Sigma];
         history.obj=[history.obj obj];
-    end;
+    end
 
     %----------------------------------------------------
     % check for premature convergence
