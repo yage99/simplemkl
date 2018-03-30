@@ -51,24 +51,25 @@ if nargin < 6
     vector=[];
     dual=[];
 end
-if nargin <5
+if nargin < 5
     frame=[];
 end
 
-if nargin<4
-    xsup=x;
+if nargin < 4
+    % by default, all vectors are support vector
+    xsup = x;
 end
-if nargin<3
+if nargin < 3
     kerneloption=1;
-end;
-if nargin<2
+end
+if nargin < 2
     kernel='gaussian';
-end;
+end
 if isempty(xsup)
     xsup=x;
-end;
-[n1 n2]=size(x);
-[n n3]=size(xsup);
+end
+[n1, n2]=size(x);
+[n, n3]=size(xsup);
 ps  =  zeros(n1,n);			% produit scalaire
 switch lower(kernel)
 case 'poly'
@@ -77,7 +78,7 @@ case 'poly'
     if nk>nk2
         kerneloption=kerneloption';
         nk2=nk;
-    end;
+    end
     if nk2==1
         degree=kerneloption;
         var=ones(1,n2);
@@ -93,13 +94,13 @@ case 'poly'
     elseif nk2 ==n2+2
         degree=kerneloption(1);
         var=kerneloption(2:n2+1);
-    end;
+    end
 
     if nk2==1
         aux=1;
     else
         aux=repmat(var,n,1);
-    end;
+    end
   
     ps= x *(xsup.*aux.^2)';
 
@@ -107,14 +108,14 @@ case 'poly'
         K =(ps+1).^degree;
     else
         K=ps;
-    end;
+    end
 case 'polyhomog'
     
     [nk,nk2]=size(kerneloption);   
     if nk>nk2
         kerneloption=kerneloption';
         nk2=nk;
-    end;
+    end
     if nk2==1
         degree=kerneloption;
         var=ones(1,n2);
@@ -125,36 +126,33 @@ case 'polyhomog'
         else
             degree=kerneloption(1);
             var=kerneloption(2:nk2);
-        end;
-    end;
-    
+        end
+    end
     
     aux=repmat(var,n,1);
     ps= x *(xsup.*aux.^2)';
     K =(ps).^degree;
     
-    
 case 'gaussian'
     [nk,nk2]=size(kerneloption);
     if nk ~=nk2
         if nk>nk2
-            kerneloption=kerneloption';
+            kerneloption = kerneloption';
         end
     else
-        kerneloption=ones(1,n2)*kerneloption;
+        kerneloption = ones(1, n2) * kerneloption;
     end
     
-    if length(kerneloption)~=n2 & length(kerneloption)~=n2+1 
+    if length(kerneloption) ~= n2 & length(kerneloption) ~= n2+1 
         error('Number of kerneloption is not compatible with data...');
     end
     
-    
     metric = diag(1./kerneloption.^2);
-    ps = x*metric*xsup'; 
-    [nps,pps]=size(ps);
-    normx = sum(x.^2*metric,2);
-    normxsup = sum(xsup.^2*metric,2);
-    ps = -2*ps + repmat(normx,1,pps) + repmat(normxsup',nps,1) ; 
+    ps = x * metric * xsup'; 
+    [nps, pps] = size(ps);
+    normx = sum(x.^2 * metric, 2);
+    normxsup = sum(xsup.^2 * metric, 2);
+    ps = -2*ps + repmat(normx,1,pps) + repmat(normxsup',nps,1); 
     
     K = exp(-ps/2);
     
@@ -163,8 +161,7 @@ case 'htrbf'    % heavy tailed RBF  %see Chappelle Paper%
     a=kerneloption(1);
     for i=1:n
         ps(:,i) = sum( abs((x.^a - ones(n1,1)*xsup(i,:).^a)).^b   ,2);
-    end;
-    
+    end
     
     K = exp(-ps);
     
