@@ -112,15 +112,15 @@ end;
 %--------------------------------------------------------------------------------
 % Options used in subroutines
 %--------------------------------------------------------------------------------
-if ~isfield(option,'goldensearch_deltmax');
+if ~isfield(option,'goldensearch_deltmax')
     option.goldensearch_deltmax=1e-1;
 end
-if ~isfield(option,'goldensearchmax');
+if ~isfield(option,'goldensearchmax')
     optiongoldensearchmax=1e-8;
-end;
-if ~isfield(option,'firstbasevariable');
+end
+if ~isfield(option,'firstbasevariable')
     option.firstbasevariable='first';
-end;
+end
 
 %------------------------------------------------------------------------------%
 % Initialize
@@ -132,9 +132,6 @@ loop = 1;
 status=0;
 numericalaccuracy=1e-9;
 goldensearch_deltmaxinit= option.goldensearch_deltmax;
-
-
-
 
 %-----------------------------------------
 % Initializing SVM
@@ -170,17 +167,17 @@ history.dualitygap=[1];
 % Update Main loop
 %------------------------------------------------------------------------------%
 
-while loop & nloopmax >0 ;
+while loop & nloopmax > 0
 
-    nloop = nloop+1;
-    history.sigma= [history.sigma;Sigma];
-    history.obj=[history.obj obj];
+    nloop = nloop + 1;
+    history.sigma = [history.sigma; Sigma];
+    history.obj = [history.obj obj];
 
     %-----------------------------------------
     % Update weigths Sigma
     %-----------------------------------------
     t = cputime ;
-    [Sigma,Alpsup,w0,pos,obj] = mklsvmupdate(K,Sigma,pos,Alpsup,w0,C,yapp,grad,obj,option) ;
+    [Sigma, Alpsup, w0, pos, obj] = mklsvmupdate(K,Sigma,pos,Alpsup,w0,C,yapp,grad,obj,option) ;
     %-----------------------------------------
     % Thresholding
     %-----------------------------------------
@@ -193,12 +190,12 @@ while loop & nloopmax >0 ;
     % Numerical cleaning
     %-------------------------------
     Sigma(find(abs(Sigma<option.numericalprecision)))=0;
-    Sigma=Sigma/sum(Sigma);
+    Sigma = Sigma / sum(Sigma);
     %-----------------------------------------------------------
     % Enhance accuracy of line search if necessary
     %-----------------------------------------------------------
     if max(abs(Sigma-Sigmaold))<option.numericalprecision & option.goldensearch_deltmax > optiongoldensearchmax
-        option.goldensearch_deltmax=option.goldensearch_deltmax/10;
+        option.goldensearch_deltmax = option.goldensearch_deltmax/10;
     elseif option.goldensearch_deltmax~=goldensearch_deltmaxinit
         option.goldensearch_deltmax*10;
     end
@@ -283,7 +280,7 @@ while loop & nloopmax >0 ;
 
         history.sigma= [history.sigma;Sigma];
         history.obj=[history.obj obj];
-    end;
+    end
 
     %----------------------------------------------------
     % check duality gap
@@ -309,7 +306,7 @@ while loop & nloopmax >0 ;
         history.obj=[history.obj obj];
         status=1;
         fprintf(1,'Premature Convergence KKT- Duality Gap Not Satisfied\n');
-    end;
+    end
 
     %-----------------------------------------------------
     % check nbiteration conditions

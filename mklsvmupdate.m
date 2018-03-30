@@ -8,10 +8,9 @@ function [Sigma,Alpsup,w0,pos,CostNew] = mklsvmpdate(K,Sigma,pos,Alpsup,w0,C,yap
 d = length(Sigma);
 gold = (sqrt(5)+1)/2 ;
 
-
-SigmaInit = Sigma ;
-SigmaNew  = SigmaInit ; 
-descold = zeros(1,d);
+SigmaInit = Sigma;
+SigmaNew  = SigmaInit; 
+descold = zeros(1, d);
 
 %---------------------------------------------------------------
 % Compute Current Cost and Gradient
@@ -25,7 +24,7 @@ descold = zeros(1,d);
 %       %  GradNew = gradsvmreg(K,Alpsup,yapp) ;
 % end;
 
-NormGrad = GradNew*GradNew';
+NormGrad = GradNew * GradNew';
 GradNew=GradNew/sqrt(NormGrad);
 CostOld=CostNew;
 %---------------------------------------------------------------
@@ -54,9 +53,6 @@ end;
 GradNew = GradNew - GradNew(coord) ;
 desc = - GradNew.* ( (SigmaNew>0) | (GradNew<0) ) ;
 desc(coord) = - sum(desc);  % NB:  GradNew(coord) = 0
-
-
-
 
 %----------------------------------------------------
 % Compute optimal stepsize
