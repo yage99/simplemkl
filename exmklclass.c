@@ -56,8 +56,8 @@ int main(int argc, char** argv) {
 
   int nbdata = 0;
   int dim = 0;
-  float** x = loadCSV("ionosphere_x.txt", &nbdata, &dim);
-  int** y = loadClassCSV("ionosphere_y.txt");
+  double** x = loadCSV("ionosphere_x.txt", &nbdata, &dim);
+  int* y = loadClassCSV("ionosphere_y.txt");
 
   int nbtrain = nbdata * ratio;
 

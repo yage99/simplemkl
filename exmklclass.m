@@ -70,7 +70,11 @@ rand('state',0);
 
 for i=1: nbiter
     i
-    [xapp,yapp,xtest,ytest,indice]=CreateDataAppTest(x, y, nbtrain,classcode);
+    %[xapp,yapp,xtest,ytest,indice]=CreateDataAppTest(x, y, nbtrain,classcode);
+    xapp = csvread('xapp.csv');
+    yapp = csvread('yapp.csv');
+    xtest = csvread('xtest.csv');
+    ytest = csvread('ytest.csv');
     [xapp,xtest]=normalizemeanstd(xapp,xtest);
     [kernel,kerneloptionvec,variableveccell]=CreateKernelListWithVariable(variablevec,dim,kernelt,kerneloptionvect);
     [Weight,InfoKernel]=UnitTraceNormalization(xapp,kernel,kerneloptionvec,variableveccell);

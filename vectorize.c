@@ -6,7 +6,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 int k,k1,i,j,n;
 double *K, *z;
 
+// K, the kernel matrix
 K = mxGetPr(prhs[0]); 
+// n rows of K
 n =  mxGetM(prhs[0]);
 
 plhs[0]=mxCreateDoubleMatrix(n*(n+1)/2,1,0); 

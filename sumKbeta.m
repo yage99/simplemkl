@@ -21,9 +21,9 @@ else
     if size(beta,1)>1;
         beta=beta';
     end;
-if isa(K.data,'single');
-    Kaux=devectorize_single(K.data*beta');
-else
-    Kaux=devectorize(K.data*beta');
-end;
+    if isa(K.data,'single');
+        Kaux=devectorize_single(K.data*beta');
+    else
+        Kaux=devectorize(K.data*beta');
+    end;
 end;
