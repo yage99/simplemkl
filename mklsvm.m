@@ -42,38 +42,38 @@ if ~isempty(K)
         nbkernel=size(K,3);
         if option.efficientkernel==1
             K = build_efficientK(K);
-        end;
-    elseif option.efficientkernel==1 & isstruct(K);
+        end
+    elseif option.efficientkernel==1 & isstruct(K)
         nbkernel=K.nbkernel;     
-    end;
+    end
 else
     error('No kernels defined ...');
-end;
+end
 
-if ~isfield(option,'nbitermax');
+if ~isfield(option,'nbitermax')
     nloopmax=1000;
 else
     nloopmax=option.nbitermax;
-end;
-if ~isfield(option,'algo');
+end
+if ~isfield(option,'algo')
     option.algo='svmclass';
-end;
-if ~isfield(option,'seuil');
+end
+if ~isfield(option,'seuil')
     seuil=1e-12;
 else
     seuil=option.seuil;
 end
 if ~isfield(option,'seuilitermax')
     option.seuilitermax=20;
-end;
-if ~isfield(option,'seuildiffsigma');
+end
+if ~isfield(option,'seuildiffsigma')
     option.seuildiffsigma=1e-5;
 end
-if ~isfield(option,'seuildiffconstraint');
+if ~isfield(option,'seuildiffconstraint')
     option.seuildiffconstraint=0.05;
 end
 
-if ~isfield(option,'lambdareg');
+if ~isfield(option,'lambdareg')
     lambdareg=1e-10;
     option.lambdareg=1e-10;
 else
@@ -81,30 +81,30 @@ else
 end
 
 
-if ~isfield(option,'numericalprecision');
+if ~isfield(option,'numericalprecision')
     option.numericalprecision=0;
-end;
+end
 
-if ~isfield(option,'verbosesvm');
+if ~isfield(option,'verbosesvm')
     verbosesvm=0;
     option.verbosesvm=0;
 else
     verbosesvm=option.verbosesvm;
 end
 
-if ~isfield(option,'sigmainit');
-    Sigma=ones(1,nbkernel)/nbkernel;
+if ~isfield(option,'sigmainit')
+    Sigma = ones(1, nbkernel) / nbkernel;
 else
-    Sigma=option.sigmainit ;
-    ind=find(Sigma==0);
-end;
+    Sigma = option.sigmainit;
+    ind = find(Sigma==0);
+end
 
 
-if isfield(option,'alphainit');
+if isfield(option,'alphainit')
     alphainit=option.alphainit;
 else
     alphainit=[];
-end;
+end
 
 
 
@@ -141,7 +141,7 @@ if ~isempty(K)
     kerneloption.matrix=sumKbeta(K,Sigma);
 else
     error('No kernels defined ...');
-end;
+end
 switch option.algo
     case 'svmclass'
         [xsup,Alpsup,w0,pos,aux,aux,obj] = svmclass([],yapp,C,lambdareg,kernel,kerneloption,verbosesvm,span,alphainit);

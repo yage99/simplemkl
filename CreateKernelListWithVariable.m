@@ -5,6 +5,7 @@ for i=1:length(variablecell)
         variablecellaux{j} = variablecell{i};
         kernelcellaux{j} = kernelcell{i};
         kerneloptioncellaux{j} = kerneloptioncell{i};
+        j=j+1;
         continue;
     end
     switch variablecell{i}

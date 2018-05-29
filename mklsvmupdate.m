@@ -69,23 +69,23 @@ deltmax = stepmax;
 if isempty(stepmax) | stepmax==0
     Sigma = SigmaNew ;
     return
-end,
+end
 if stepmax > 0.1
      stepmax=0.1;
-end;
+end
 
 %-----------------------------------------------------
 %  Projected gradient
 %-----------------------------------------------------
 
-while costmax<costmin;
+while costmax<costmin
     switch option.algo
         case 'svmclass'
-            [costmax,Alpsupaux,w0aux,posaux] = costsvmclass(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option) ;
+            [costmax,Alpsupaux,w0aux,posaux] = costsvmclass(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option);
         case 'svmreg'
-            [costmax,Alpsupaux,w0aux,posaux] = costsvmreg(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option) ;
+            [costmax,Alpsupaux,w0aux,posaux] = costsvmreg(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option);
             
-    end;
+    end
     if costmax<costmin
         costmin = costmax;
         SigmaNew  = SigmaNew + stepmax * desc;
