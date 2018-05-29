@@ -1,6 +1,10 @@
-function [kernelcellaux,kerneloptioncellaux,variablecellaux]=CreateKernelListWithVariable(variablecell,dim,kernelcell,kerneloptioncell)
+function [kernelcellaux,kerneloptioncellaux,variablecellaux] = CreateKernelListWithVariable(variablecell,dim,kernelcell,kerneloptioncell)
+
 j=1;
 for i=1:length(variablecell)
+
+    % edit by yage
+    % if variable cell is number vector, then it's predifined kernel
     if ~ischar(variablecell{i})
         variablecellaux{j} = variablecell{i};
         kernelcellaux{j} = kernelcell{i};
@@ -8,6 +12,7 @@ for i=1:length(variablecell)
         j=j+1;
         continue;
     end
+
     switch variablecell{i}
         case 'all'
             kernelcellaux{j}=kernelcell{i};

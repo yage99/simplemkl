@@ -1,5 +1,7 @@
 function Kaux=sumKbeta(K,beta)
 
+% This Method returns the combined kernel by the weight vector of beta.
+%
 % Usage
 %  Kaux=sumKbeta(K,beta)
 %
@@ -11,11 +13,11 @@ function Kaux=sumKbeta(K,beta)
 
 if ~isstruct(K)
     ind=find(beta);
-    nbkernel=size(K,3);
-    Kaux=zeros(size(K(:,:,1)));
-    N=length(ind);
-    for j=1:N
-        Kaux=Kaux+ beta(ind(j))*K(:,:,ind(j));
+    nbkernel = size(K,3);
+    Kaux = zeros(size(K(:,:,1)));
+    N = length(ind);
+    for j = 1:N
+        Kaux = Kaux + beta(ind(j)) * K(:,:,ind(j));
     end
 else
     if size(beta,1)>1;

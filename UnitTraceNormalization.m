@@ -1,34 +1,33 @@
-function [Weigth, InfoKernel]=UnitTraceNormalization(x,kernelvec,kerneloptionvec,variablevec)
+function [Weigth, InfoKernel] = UnitTracevariableNumormalization(x, ...
+                                    kernelTypeVec, kernelOptionVec, ...
+                                    kernelVariableVec)
+%
 
-chunksize=200;
-N=size(x,1);
-nbk=1;
-for i = 1:length(kernelvec)
+chunksize = 200;
+variableNum = size(x, 1);
+nbk = 1;
+for i = 1:length(kernelTypeVec)
     % i
-    for k = 1:length(kerneloptionvec{i})
+    for k = 1:length(kernelOptionVec{i})
 
         somme = 0;
-        chunks1 = ceil(N / chunksize);
+        chunkNum = ceil(variableNum / chunksize);
 
-        for ch1 = 1:chunks1
-            ind1 = (1 + (ch1 - 1) * chunksize) : min(N, ch1 * chunksize);
-            somme = somme + sum(diag(svmkernel(x(ind1,variablevec{i}),...
-                                               kernelvec{i},...
-                                               kerneloptionvec{i}(k))));
+        for chunkIndex = 1:chunkNum
+            sampleVec = [(1 + (chunkIndex - 1) * chunksize) : ...
+                         min(variableNum, chunkIndex * chunksize)];
+            somme = somme + sum(diag(svmkernel(...
+                        x(sampleVec, kernelVariableVec{i}), kernelTypeVec{i},...
+                        kernelOptionVec{i}(k))));
         end
-        %for j=1:N
-        %    somme=somme+svmkernel(x(j,variablevec{i}),kernelvec{i},kerneloptionvec{i}(k));
-        %
-        %end
+
         if somme ~= 0
             Weigth(nbk) = 1 / somme;
-            InfoKernel(nbk).kernel=kernelvec{i};
-            InfoKernel(nbk).kerneloption=kerneloptionvec{i}(k);
-            InfoKernel(nbk).variable=variablevec{i};
-            InfoKernel(nbk).Weigth=1/somme;
-            nbk=nbk+1;
-%         else
-%             A
+            InfoKernel(nbk).kernel = kernelTypeVec{i};
+            InfoKernel(nbk).kerneloption = kernelOptionVec{i}(k);
+            InfoKernel(nbk).variable = kernelVariableVec{i};
+            InfoKernel(nbk).Weigth = 1 / somme;
+            nbk = nbk + 1;
         end
     end
 end

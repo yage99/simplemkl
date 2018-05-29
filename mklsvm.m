@@ -1,4 +1,4 @@
-function [Sigma,Alpsup,w0,pos,history,obj,status] = mklsvm(K,yapp,C,option,verbose)
+function [Sigma,Alpsup,w0,pos,history,obj,status] = mklsvm(K, yapp, C, option, verbose)
 
 % USAGE [Sigma,Alpsup,w0,pos,history,obj,status] = mklsvm(K,yapp,C,option,verbose)
 %
@@ -125,20 +125,20 @@ end
 %------------------------------------------------------------------------------%
 % Initialize
 %------------------------------------------------------------------------------%
-kernel       = 'numerical';
-span         = 1;
-nloop = 0;
-loop = 1;
-status=0;
-numericalaccuracy=1e-9;
-goldensearch_deltmaxinit= option.goldensearch_deltmax;
+kernel = 'numerical';
+span   = 1;
+nloop  = 0;
+loop   = 1;
+status = 0;
+numericalaccuracy = 1e-9;
+goldensearch_deltmaxinit = option.goldensearch_deltmax;
 
 %-----------------------------------------
 % Initializing SVM
 %------------------------------------------
-SumSigma=sum(Sigma);
+SumSigma = sum(Sigma);
 if ~isempty(K)
-    kerneloption.matrix=sumKbeta(K,Sigma);
+    kerneloption.matrix = sumKbeta(K, Sigma);
 else
     error('No kernels defined ...');
 end
@@ -163,9 +163,9 @@ history.obj=[];
 history.sigma=[];
 history.KKTconstraint=[1];
 history.dualitygap=[1];
-%------------------------------------------------------------------------------%
-% Update Main loop
-%------------------------------------------------------------------------------%
+%%-----------------------------------------------------------------------------%
+%%  Update Main loop
+%%-----------------------------------------------------------------------------%
 
 while loop & nloopmax > 0
 

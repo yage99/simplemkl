@@ -27,7 +27,7 @@ function [xsup,w,d,pos,timeps,alpha,obj]=svmclass(x,y,c,lambda,kernel,kernelopti
 %
 % 		verbose : display outputs (default value is 0: no display)
 %
-%     Span    : span matrix for semiparametric learning 
+%      Span    : span matrix for semiparametric learning 
 %               This vector is sized Nbapp*Nbbasisfunction where
 %               phi(i,j)= f_j(x(i));
 %
@@ -35,9 +35,9 @@ function [xsup,w,d,pos,timeps,alpha,obj]=svmclass(x,y,c,lambda,kernel,kernelopti
 %
 % OUTPUT
 %
-% xsup	coordinates of the Support Vector
+% xsup	 coordinates of the Support Vector
 % w      weight
-% b		bias
+% b		 bias
 % pos    position of Support Vector
 % timeps time for processing the scalar product
 % alpha  Lagragian multiplier
@@ -126,17 +126,18 @@ e = ones(size(y));
 timeps = cputime - ttt;
 
 if verbose ~= 0 disp('in QP'); end;
+% QP solver
 if isinf(c)                                                           
-    [alpha , lambda , pos] =  monqpCinfty(H,e,A,b,lambda,verbose,x,ps,alphainit);  
+    [alpha , lambda , pos] = monqpCinfty(H,e,A,b,lambda,verbose,x,ps,alphainit);  
 else                                                                 
     [alpha , lambda , pos] = monqp(H,e,A,b,c,lambda,verbose,x,ps,alphainit);         
-    
 end
+
 if verbose ~= 0 disp('out QP'); end;
 
 alphaall=zeros(size(e));
 alphaall(pos)=alpha;
-obj=-0.5*alphaall'*H*alphaall +e'*alphaall;
+obj = -0.5 * alphaall' * H * alphaall + e' * alphaall;
 
 if ~isempty(x)
     xsup = x(pos,:);

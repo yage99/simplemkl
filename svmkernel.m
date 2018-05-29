@@ -1,4 +1,4 @@
-function [K, option] = svmkernel(x,kernel,kerneloption,xsup,framematrix,vector,dual)
+function [K, option] = svmkernel(x, kernel, kerneloption, xsup, framematrix, vector, dual)
 
 % Usage  K=svmkernel(x,kernel,kerneloption,xsup,frame,vector,dual);
 %
@@ -134,12 +134,13 @@ case 'polyhomog'
     K =(ps).^degree;
     
 case 'gaussian'
-    [nk,nk2]=size(kerneloption);
+    [nk, nk2] = size(kerneloption);
     if nk ~=nk2
         if nk>nk2
             kerneloption = kerneloption';
         end
     else
+        % only one number
         kerneloption = ones(1, n2) * kerneloption;
     end
     
@@ -147,7 +148,7 @@ case 'gaussian'
         error('Number of kerneloption is not compatible with data...');
     end
     
-    metric = diag(1./kerneloption.^2);
+    metric = diag(1 ./ kerneloption .^ 2);
     ps = x * metric * xsup'; 
     [nps, pps] = size(ps);
     normx = sum(x.^2 * metric, 2);
@@ -202,4 +203,3 @@ case 'jcb'
     K=x*xsup';
     
 end
-

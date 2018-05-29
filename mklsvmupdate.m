@@ -1,19 +1,19 @@
 function [Sigma,Alpsup,w0,pos,CostNew] = mklsvmpdate(K,Sigma,pos,Alpsup,w0,C,yapp,GradNew,CostNew,option)
 
 
-%------------------------------------------------------------------------------%
-% Initialize
-%------------------------------------------------------------------------------%
+%%-----------------------------------------------------------------------------%
+%% Initialize
+%%-----------------------------------------------------------------------------%
 
 d = length(Sigma);
 gold = (sqrt(5)+1)/2 ;
 
 SigmaInit = Sigma;
-SigmaNew  = SigmaInit; 
+SigmaNew  = SigmaInit;
 descold = zeros(1, d);
 
-%---------------------------------------------------------------
-% Compute Current Cost and Gradient
+%%---------------------------------------------------------------
+%% Compute Current Cost and Gradient
 %%--------------------------------------------------------------
 % switch option.algo
 %     case 'svmclass'
@@ -27,8 +27,9 @@ descold = zeros(1, d);
 NormGrad = GradNew * GradNew';
 GradNew=GradNew/sqrt(NormGrad);
 CostOld=CostNew;
-%---------------------------------------------------------------
-% Compute reduced Gradient and descent direction
+
+%%---------------------------------------------------------------
+%% Compute reduced Gradient and descent direction
 %%--------------------------------------------------------------
 
 switch option.firstbasevariable
@@ -48,8 +49,8 @@ switch option.firstbasevariable
     else
         [val,coord] = max(SigmaNew) ;
     end;
-        
 end;
+
 GradNew = GradNew - GradNew(coord) ;
 desc = - GradNew.* ( (SigmaNew>0) | (GradNew<0) ) ;
 desc(coord) = - sum(desc);  % NB:  GradNew(coord) = 0
@@ -74,36 +75,37 @@ if stepmax > 0.1
      stepmax=0.1;
 end
 
-%-----------------------------------------------------
-%  Projected gradient
-%-----------------------------------------------------
+%%-----------------------------------------------------
+%%  Projected gradient
+%%-----------------------------------------------------
 
-while costmax<costmin
+% updates gradient untile stops reducing
+while costmax < costmin
     switch option.algo
         case 'svmclass'
             [costmax,Alpsupaux,w0aux,posaux] = costsvmclass(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option);
         case 'svmreg'
             [costmax,Alpsupaux,w0aux,posaux] = costsvmreg(K,stepmax,desc,SigmaNew,pos,Alpsup,C,yapp,option);
-            
     end
-    if costmax<costmin
+
+    if costmax < costmin
         costmin = costmax;
         SigmaNew  = SigmaNew + stepmax * desc;
-            %-------------------------------
-    % Numerical cleaning
-    %-------------------------------
-%     SigmaNew(find(abs(SigmaNew<option.numericalprecision)))=0;
-%      SigmaNew=SigmaNew/sum(SigmaNew);
+        %-------------------------------
+        % Numerical cleaning
+        %-------------------------------
+        % SigmaNew(find(abs(SigmaNew<option.numericalprecision)))=0;
+        % SigmaNew=SigmaNew/sum(SigmaNew);
         % SigmaNew  =SigmaP;
         % project descent direction in the new admissible cone
         % keep the same direction of descent while cost decrease
-        %desc = desc .* ( (SigmaNew>0) | (desc>0) ) ;
-        desc = desc .* ( (SigmaNew>option.numericalprecision) | (desc>0) ) ;
-        desc(coord) = - sum(desc([[1:coord-1] [coord+1:end]]));  
-        ind = find(desc<0);
-        Alpsup=Alpsupaux;
-        w0=w0aux;
-        pos=posaux;
+        % desc = desc .* ( (SigmaNew>0) | (desc>0) ) ;
+        desc = desc .* ((SigmaNew > option.numericalprecision) | (desc > 0)) ;
+        desc(coord) = -sum(desc([[1:coord-1] [coord+1:end]]));
+        ind = find(desc < 0);
+        Alpsup = Alpsupaux;
+        w0 = w0aux;
+        pos = posaux;
         if ~isempty(ind)
             stepmax = min(-(SigmaNew(ind))./desc(ind));
             deltmax = stepmax;
@@ -112,14 +114,13 @@ while costmax<costmin
             stepmax = 0;
             deltmax = 0;
         end;
-        
     end;
 end;
 
 
-%-----------------------------------------------------
-%  Linesearch
-%-----------------------------------------------------
+%%-----------------------------------------------------
+%%  Linesearch
+%%-----------------------------------------------------
 
 Step = [stepmin stepmax];
 Cost = [costmin costmax];
@@ -127,15 +128,14 @@ Cost = [costmin costmax];
 % optimization of stepsize by golden search
 while (stepmax-stepmin)>option.goldensearch_deltmax*(abs(deltmax))  & stepmax > eps;
     stepmedr = stepmin+(stepmax-stepmin)/gold;
-    stepmedl = stepmin+(stepmedr-stepmin)/gold;                     
+    stepmedl = stepmin+(stepmedr-stepmin)/gold;
     switch option.algo
         case 'svmclass'
             [costmedr,Alpsupr,w0r,posr] = costsvmclass(K,stepmedr,desc,SigmaNew,pos,Alpsup,C,yapp,option) ;
             [costmedl,Alpsupl,w01,posl] = costsvmclass(K,stepmedl,desc,SigmaNew,posr,Alpsupr,C,yapp,option) ;
         case 'svmreg'
             [costmedr,Alpsupr,w0r,posr] = costsvmreg(K,stepmedr,desc,SigmaNew,pos,Alpsup,C,yapp,option) ;
-            [costmedl,Alpsupl,w01,posl] = costsvmreg(K,stepmedl,desc,SigmaNew,posr,Alpsupr,C,yapp,option) ;
-            
+            [costmedl,Alpsupl,w01,posl] = costsvmreg(K,stepmedl,desc,SigmaNew,posr,Alpsupr,C,yapp,option);
     end;
     Step = [stepmin stepmedl stepmedr stepmax];
     Cost = [costmin costmedl costmedr costmax];
@@ -177,8 +177,7 @@ CostNew = Cost(coord) ;
 step = Step(coord) ;
 % Sigma update
 if CostNew < CostOld ;
-    SigmaNew = SigmaNew + step * desc;  
-    
-end;       
+    SigmaNew = SigmaNew + step * desc;
+end;
 
 Sigma = SigmaNew ;
