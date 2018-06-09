@@ -1,4 +1,4 @@
-function [cost,Alpsupaux,w0aux,posaux] = costsvmclass(K,StepSigma,DirSigma,Sigma,indsup,Alpsup,C,yapp,option);
+function [cost,Alpsupaux,w0aux,posaux] = costsvmclass(K,StepSigma,DirSigma,Sigma,indsup,Alpsup,C,yapp,option)
 
 global nbcall
 nbcall = nbcall + 1;
@@ -13,5 +13,10 @@ span=1;
 lambdareg=option.lambdareg;
 verbosesvm=option.verbosesvm;
 alphainit=zeros(size(yapp));
-alphainit(indsup)=yapp(indsup).*Alpsup;
+alphainit(indsup) = yapp(indsup) .* Alpsup;
 [xsup,Alpsupaux,w0aux,posaux,timeps,alpha,cost] = svmclass([],yapp,C,lambdareg,kernel,kerneloption,verbosesvm,span,alphainit);
+
+% added by yage
+if option.penalty > 0
+    cost = cost + option.penalty * sum(Sigma .^ 2);
+end

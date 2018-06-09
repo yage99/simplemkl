@@ -165,9 +165,8 @@ while (stepmax-stepmin)>option.goldensearch_deltmax*(abs(deltmax))  & stepmax > 
             pos=posr;
             Alpsup=Alpsupr;
             w0=w0r;
-    end;
-end;
-
+    end
+end
 
 %---------------------------------
 % Final Updates
